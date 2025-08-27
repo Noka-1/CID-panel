@@ -1,156 +1,69 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CID • Panel FIB</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-
-    <!-- ======= LOGOWANIE ======= -->
-    <section id="auth" class="auth">
-      <div class="auth-card">
-        <h1 class="app-title">CID • Panel FIB</h1>
-        <div class="tabs">
-          <button class="tab active" data-tab="admin">Admin</button>
-          <button class="tab" data-tab="agent">Agent</button>
-        </div>
-
-        <!-- Admin (Firebase Auth) -->
-        <div class="tab-panel active" id="panel-admin">
-          <div class="field">
-            <label>E-mail</label>
-            <input id="adminEmail" type="email" placeholder="admin@cid.division" value="admin@cid.division" />
-          </div>
-          <div class="field">
-            <label>Hasło</label>
-            <input id="adminPass" type="password" placeholder="••••••••" />
-          </div>
-          <button id="btnAdminLogin" class="btn primary">Zaloguj jako admin</button>
-          <p id="adminErr" class="hint err"></p>
-        </div>
-
-        <!-- Agent (UID + hasło z Firestore) -->
-        <div class="tab-panel" id="panel-agent">
-          <div class="field">
-            <label>UID</label>
-            <input id="agentUID" type="text" placeholder="np. 86080" />
-          </div>
-          <div class="field">
-            <label>Hasło</label>
-            <input id="agentPass" type="password" placeholder="••••••••" />
-          </div>
-          <button id="btnAgentLogin" class="btn primary">Zaloguj jako agent</button>
-          <p id="agentErr" class="hint err"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======= PANEL ADMINA ======= -->
-    <section id="admin" class="hidden">
-      <header class="topbar">
-        <div class="brand">CID • Panel FIB — <span class="badge">ADMIN</span></div>
-        <div class="topbar-actions">
-          <button id="btnLogoutAdmin" class="btn ghost">Wyloguj</button>
-        </div>
-      </header>
-
-      <main class="container">
-        <!-- Dodawanie agenta -->
-        <div class="card">
-          <div class="card-title">Dodaj agenta</div>
-          <div class="grid-2">
-            <div class="field"><label>Imię</label><input id="aImie" type="text" /></div>
-            <div class="field"><label>Nazwisko</label><input id="aNazwisko" type="text" /></div>
-            <div class="field"><label>Ranga (1–5 lub 03–01)</label><input id="aRanga" type="text" placeholder="np. 3 lub 02" /></div>
-            <div class="field"><label>Stopień</label><input id="aStopien" type="text" placeholder="np. Director of the FIB" /></div>
-            <div class="field"><label>UID (unikalny)</label><input id="aUID" type="text" placeholder="np. 86080" /></div>
-            <div class="field"><label>Hasło (dla logowania UID)</label><input id="aHaslo" type="password" /></div>
-          </div>
-          <button id="btnAddAgent" class="btn success">Dodaj agenta</button>
-          <p class="hint">Agent loguje się w zakładce „Agent” używając UID + hasło.</p>
-        </div>
-
-        <!-- Lista agentów -->
-        <div class="card">
-          <div class="card-title">Lista agentów</div>
-          <div class="filters">
-            <input id="search" class="input" type="text" placeholder="Szukaj po imieniu/nazwisku/UID…" />
-          </div>
-          <div id="agentsList" class="stack"></div>
-        </div>
-      </main>
-
-      <!-- Drawer profilu -->
-      <aside id="drawer" class="drawer">
-        <div class="drawer-header">
-          <div>
-            <div class="drawer-title" id="pName">–</div>
-            <div class="drawer-subtitle" id="pUID">UID: –</div>
-          </div>
-          <button id="btnCloseDrawer" class="btn icon" title="Zamknij">×</button>
-        </div>
-
-        <div class="drawer-body">
-          <div class="kv"><span>Imię</span><b id="pImie">–</b></div>
-          <div class="kv"><span>Nazwisko</span><b id="pNazwisko">–</b></div>
-          <div class="kv"><span>Ranga</span><b id="pRanga">–</b></div>
-          <div class="kv"><span>Stopień</span><b id="pStopien">–</b></div>
-
-          <h4>Szkolenia</h4>
-          <ul id="pTrainings" class="trainings"></ul>
-
-          <div class="divider"></div>
-
-          <h4>Dodaj szkolenie</h4>
-          <div class="grid-2">
-            <div class="field"><label>Nazwa szkolenia</label><input id="tName" type="text" /></div>
-            <div class="field">
-              <label>Status</label>
-              <select id="tStatus">
-                <option value="false">❌ Niezdane</option>
-                <option value="true">✅ Zdane</option>
-              </select>
-            </div>
-          </div>
-          <button id="btnAddTraining" class="btn primary">Dodaj szkolenie</button>
-        </div>
-      </aside>
-      <div id="backdrop" class="backdrop"></div>
-    </section>
-
-    <!-- ======= PANEL AGENTA ======= -->
-    <section id="agent" class="hidden">
-      <header class="topbar">
-        <div class="brand">CID • Panel FIB — <span class="badge blue">AGENT</span></div>
-        <div class="topbar-actions">
-          <button id="btnLogoutAgent" class="btn ghost">Wyloguj</button>
-        </div>
-      </header>
-
-      <main class="container">
-        <div class="card">
-          <div class="card-title">Mój profil</div>
-          <div class="profile-grid">
-            <div class="kv big"><span>Imię</span><b id="mImie">–</b></div>
-            <div class="kv big"><span>Nazwisko</span><b id="mNazwisko">–</b></div>
-            <div class="kv big"><span>Ranga</span><b id="mRanga">–</b></div>
-            <div class="kv big"><span>Stopień</span><b id="mStopien">–</b></div>
-            <div class="kv big"><span>UID</span><b id="mUID">–</b></div>
-          </div>
-
-          <h4>Moje szkolenia</h4>
-          <ul id="mTrainings" class="trainings"></ul>
-        </div>
-      </main>
-    </section>
+  <div id="login-container">
+    <h2>CID • Panel FIB</h2>
+    <div>
+      <button onclick="switchLogin('admin')">Admin</button>
+      <button onclick="switchLogin('agent')">Agent</button>
+    </div>
+    <div id="login-form">
+      <input type="text" id="login-uid" placeholder="UID">
+      <input type="password" id="login-password" placeholder="Hasło">
+      <button onclick="login()">Zaloguj</button>
+      <p id="login-error"></p>
+    </div>
   </div>
 
-  <!-- Firebase + Aplikacja -->
+  <div id="panel" style="display:none;">
+    <button onclick="logout()">Wyloguj</button>
+
+    <h3>Dodaj agenta</h3>
+    <input type="text" id="imie" placeholder="Imię">
+    <input type="text" id="nazwisko" placeholder="Nazwisko">
+    <input type="text" id="ranga" placeholder="Ranga (1-5, 03-01)">
+    <input type="text" id="stopien" placeholder="Stopień">
+    <input type="text" id="uid" placeholder="UID (unikalny)">
+    <input type="password" id="haslo" placeholder="Hasło">
+    <label>
+      <input type="checkbox" id="zarzad"> Zarząd
+    </label>
+    <button onclick="addAgent()">Dodaj agenta</button>
+
+    <h3>Lista agentów</h3>
+    <div id="lista-agentow"></div>
+  </div>
+
+  <div id="profil-agenta" style="display:none;">
+    <button onclick="closeProfile()">← Wróć</button>
+    <h3>Profil agenta</h3>
+    <p><b>Imię:</b> <span id="p-imie"></span></p>
+    <p><b>Nazwisko:</b> <span id="p-nazwisko"></span></p>
+    <p><b>UID:</b> <span id="p-uid"></span></p>
+    <p><b>Stopień:</b> <span id="p-stopien"></span></p>
+    <p><b>Zarząd:</b> <span id="p-zarzad"></span></p>
+
+    <label>Ranga:
+      <select id="p-ranga">
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <option value="03">03</option>
+        <option value="5">5</option>
+        <option value="4">4</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+        <option value="1">1</option>
+      </select>
+    </label>
+    <button onclick="updateRanga()">Zapisz rangę</button>
+  </div>
+
   <script type="module" src="app.js"></script>
 </body>
 </html>
