@@ -20,12 +20,13 @@ import {
 
 /* ======= KONFIG: wklej dane swojego projektu ======= */
 const firebaseConfig = {
-  apiKey: "TWOJE_API_KEY",
-  authDomain: "TWOJ_PROJEKT.firebaseapp.com",
-  projectId: "TWOJ_PROJEKT",
-  storageBucket: "TWOJ_PROJEKT.appspot.com",
-  messagingSenderId: "NUMER",
-  appId: "APP_ID",
+  apiKey: "AIzaSyA2y8LrRjna_aALAb2M3EvWXxQ31O1YmxI",
+  authDomain: "cid-panel.firebaseapp.com",
+  projectId: "cid-panel",
+  storageBucket: "cid-panel.firebasestorage.app",
+  messagingSenderId: "1082261416682",
+  appId: "1:1082261416682:web:b3ed74f583119884860593",
+  measurementId: "G-0BB6Z67KKG"
 };
 initializeApp(firebaseConfig);
 
@@ -329,3 +330,4 @@ function pretty(e){
 
 /* start */
 show("auth");
+
