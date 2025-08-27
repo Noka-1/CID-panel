@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CID • Panel FIB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <!-- EKRAN LOGOWANIA -->
+  <main id="auth" class="view">
+    <div class="card auth-card glass">
+      <div class="logo">
+        <div class="logo-mark">CID</div>
+        <div class="logo-sub">Federal Investigation Bureau</div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="admin">Admin</button>
+        <button class="tab" data-tab="agent">Agent</button>
+      </div>
+
+      <div id="panel-admin" class="tab-panel active">
+        <label class="field">
+          <span>E-mail admina</span>
+          <input id="adminEmail" type="email" placeholder="admin@cid.division" />
+        </label>
+        <label class="field">
+          <span>Hasło</span>
+          <input id="adminPass" type="password" placeholder="••••••••" />
+        </label>
+        <button id="btnAdminLogin" class="btn primary wide">Zaloguj jako admin</button>
+        <div id="adminErr" class="err"></div>
+      </div>
+
+      <div id="panel-agent" class="tab-panel">
+        <label class="field">
+          <span>UID</span>
+          <input id="agentUID" type="text" placeholder="np. 75202" />
+        </label>
+        <label class="field">
+          <span>Hasło</span>
+          <input id="agentPass" type="password" placeholder="••••••••" />
+        </label>
+        <button id="btnAgentLogin" class="btn primary wide">Zaloguj jako agent</button>
+        <div id="agentErr" class="err"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- PANEL ADMINA -->
+  <main id="admin" class="view hidden">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span> CID • Panel FIB — <span class="role-badge">ADMIN</span>
+      </div>
+      <button id="btnLogoutAdmin" class="btn ghost">Wyloguj</button>
+    </header>
+
+    <section class="grid">
+      <div class="card glass">
+        <h3>Dodaj agenta</h3>
+        <div class="grid2">
+          <label class="field">
+            <span>Imię</span>
+            <input id="aImie" type="text" />
+          </label>
+          <label class="field">
+            <span>Nazwisko</span>
+            <input id="aNazwisko" type="text" />
+          </label>
+          <label class="field">
+            <span>Ranga (1–5 lub 03–01)</span>
+            <input id="aRanga" type="text" placeholder="np. 3 albo 02" />
+          </label>
+          <label class="field">
+            <span>Stopień</span>
+            <input id="aStopien" type="text" placeholder="np. Senior Detective" />
+          </label>
+          <label class="field">
+            <span>UID (unikalny)</span>
+            <input id="aUID" type="text" placeholder="np. 75202" />
+          </label>
+          <label class="field">
+            <span>Hasło (dla logowania UID)</span>
+            <input id="aHaslo" type="password" />
+          </label>
+          <label class="switch">
+            <input id="aZarzad" type="checkbox" />
+            <span>Członek zarządu</span>
+          </label>
+        </div>
+        <div class="hint">Agent loguje się w zakładce „Agent” używając <b>UID@cid.division</b> + hasło.</div>
+        <button id="btnAddAgent" class="btn success">Dodaj agenta</button>
+      </div>
+
+      <div class="card glass">
+        <div class="list-head">
+          <h3>Lista agentów</h3>
+          <input id="search" class="search" type="text" placeholder="Szukaj po imieniu/nazwisku/UID…" />
+        </div>
+        <div id="agentsList" class="stack"></div>
+      </div>
+    </section>
+
+    <!-- PROFIL (drawer) -->
+    <div id="backdrop" class="backdrop"></div>
+    <aside id="drawer" class="drawer">
+      <div class="drawer-head">
+        <div>
+          <div id="pName" class="title"></div>
+          <div id="pUID" class="subtitle"></div>
+        </div>
+        <div class="drawer-actions">
+          <button id="btnDeleteAgent" class="btn danger outline">Usuń agenta</button>
+          <button id="btnCloseDrawer" class="btn ghost">Zamknij</button>
+        </div>
+      </div>
+
+      <div class="drawer-body">
+        <div class="profile-grid">
+          <div class="kv"><span>Imię</span><b id="pImie">—</b></div>
+          <div class="kv"><span>Nazwisko</span><b id="pNazwisko">—</b></div>
+          <div class="kv"><span>Ranga</span>
+            <select id="pRanga" class="select">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+          <div class="kv"><span>Stopień</span><b id="pStopien">—</b></div>
+          <div class="kv">
+            <span>Zarząd</span>
+            <label class="switch inline">
+              <input id="pZarzad" type="checkbox" />
+              <span>Tak/Nie</span>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <button id="btnSaveRank" class="btn primary">Zapisz zmiany</button>
+        </div>
+
+        <h4>Szkolenia</h4>
+        <ul id="pTrainings" class="trainings"></ul>
+
+        <div class="train-form">
+          <input id="tName" type="text" placeholder="Nazwa szkolenia" />
+          <select id="tStatus">
+            <option value="true">Zdane</option>
+            <option value="false">Nie zdane</option>
+          </select>
+          <button id="btnAddTraining" class="btn success">Dodaj</button>
+        </div>
+
+        <div class="tiny-hint">
+          Usuwanie użytkownika z <b>Firebase Auth</b> wymaga Cloud Function albo ręcznie w Konsoli (z frontu jest blokada bezpieczeństwa).
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- PANEL AGENTA -->
+  <main id="agent" class="view hidden">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot dot-green"></span> CID • Panel FIB — <span class="role-badge">AGENT</span>
+      </div>
+      <button id="btnLogoutAgent" class="btn ghost">Wyloguj</button>
+    </header>
+
+    <section class="grid">
+      <div class="card glass">
+        <h3>Twój profil</h3>
+        <div class="profile-grid">
+          <div class="kv"><span>Imię</span><b id="mImie">—</b></div>
+          <div class="kv"><span>Nazwisko</span><b id="mNazwisko">—</b></div>
+          <div class="kv"><span>Ranga</span><b id="mRanga">—</b></div>
+          <div class="kv"><span>Stopień</span><b id="mStopien">—</b></div>
+          <div class="kv"><span>UID</span><b id="mUID">—</b></div>
+        </div>
+        <h4>Szkolenia</h4>
+        <ul id="mTrainings" class="trainings"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
